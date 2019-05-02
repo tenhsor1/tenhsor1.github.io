@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 // extract from chromium source code by @liuwayong
 (function () {
+    var INITIAL_DISTANCE_RAN = 0;
     'use strict';
     /**
      * T-Rex runner.
@@ -33,7 +34,7 @@
         this.tRex = null;
 
         this.distanceMeter = null;
-        this.distanceRan = 0;
+        this.distanceRan = INITIAL_DISTANCE_RAN;
 
         this.highestScore = 0;
 
@@ -821,7 +822,7 @@
                 this.runningTime = 0;
                 this.playing = true;
                 this.crashed = false;
-                this.distanceRan = 0;
+                this.distanceRan = INITIAL_DISTANCE_RAN;
                 this.setSpeed(this.config.SPEED);
                 this.time = getTimeStamp();
                 this.containerEl.classList.remove(Runner.classes.CRASHED);
@@ -1909,13 +1910,16 @@
         ACHIEVEMENT_DISTANCE: 100,
 
         // Used for conversion from pixel distance to a scaled unit.
-        COEFFICIENT: 0.025,
+        COEFFICIENT: 0.001,
 
         // Flash duration in milliseconds.
         FLASH_DURATION: 1000 / 4,
 
         // Flash iterations for achievement animation.
-        FLASH_ITERATIONS: 3
+        FLASH_ITERATIONS: 3,
+
+        // Initial Meter differential
+        INITIAL_METER: 2010
     };
 
 
@@ -2000,7 +2004,7 @@
          * @return {number} The 'real' distance ran.
          */
         getActualDistance: function (distance) {
-            return distance ? Math.round(distance * this.config.COEFFICIENT) : 0;
+            return distance ? Math.round(distance * this.config.COEFFICIENT) + this.config.INITIAL_METER : this.config.INITIAL_METER;
         },
 
         /**
