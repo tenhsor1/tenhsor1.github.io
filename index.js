@@ -117,13 +117,13 @@
         INVERT_DISTANCE: 700,
         MAX_BLINK_COUNT: 3,
         MAX_CLOUDS: 6,
-        MAX_OBSTACLE_LENGTH: 3,
+        MAX_OBSTACLE_LENGTH: 1,
         MAX_OBSTACLE_DUPLICATION: 2,
-        MAX_SPEED: 13,
-        MIN_JUMP_HEIGHT: 35,
+        MAX_SPEED: 3,
+        MIN_JUMP_HEIGHT: 55,
         MOBILE_SPEED_COEFFICIENT: 1.2,
         RESOURCE_TEMPLATE_ID: 'audio-resources',
-        SPEED: 6,
+        SPEED: 3,
         SPEED_DROP_COEFFICIENT: 3
     };
 
@@ -160,24 +160,24 @@
      */
     Runner.spriteDefinition = {
         LDPI: {
-            CACTUS_LARGE: { x: 332, y: 2 },
-            CACTUS_SMALL: { x: 228, y: 2 },
+            CACTUS_LARGE: { x: 0, y: 0 },
+            CACTUS_SMALL: { x: 0, y: 101 },
             CLOUD: { x: 86, y: 2 },
             HORIZON: { x: 2, y: 54 },
             MOON: { x: 484, y: 2 },
-            PTERODACTYL: { x: 134, y: 2 },
+            PTERODACTYL: { x: 0, y: 202 },
             RESTART: { x: 2, y: 2 },
             TEXT_SPRITE: { x: 655, y: 2 },
             TREX: { x: 848, y: 2 },
             STAR: { x: 645, y: 2 }
         },
         HDPI: {
-            CACTUS_LARGE: { x: 652, y: 2 },
-            CACTUS_SMALL: { x: 446, y: 2 },
+            CACTUS_LARGE: { x: 0, y: 0 },
+            CACTUS_SMALL: { x: 0, y: 101 },
             CLOUD: { x: 166, y: 2 },
             HORIZON: { x: 2, y: 104 },
             MOON: { x: 954, y: 2 },
-            PTERODACTYL: { x: 260, y: 2 },
+            PTERODACTYL: { x: 0, y: 202 },
             RESTART: { x: 2, y: 2 },
             TEXT_SPRITE: { x: 1294, y: 2 },
             TREX: { x: 1678, y: 2 },
@@ -287,6 +287,7 @@
          * definition.
          */
         loadImages: function () {
+            Runner.obstacleSprite = document.getElementById('offline-resources-obstacles');
             if (IS_HIDPI) {
                 Runner.imageSprite = document.getElementById('offline-resources-2x');
                 this.spriteDef = Runner.spriteDefinition.HDPI;
@@ -295,11 +296,13 @@
                 this.spriteDef = Runner.spriteDefinition.LDPI;
             }
 
-            if (Runner.imageSprite.complete) {
+            if (Runner.imageSprite.complete && Runner.obstacleSprite.complete) {
                 this.init();
             } else {
                 // If the images are not yet loaded, add a listener.
                 Runner.imageSprite.addEventListener(Runner.events.LOAD,
+                    this.init.bind(this));
+                Runner.obstacleSprite.addEventListener(Runner.events.LOAD, 
                     this.init.bind(this));
             }
         },
@@ -1274,7 +1277,7 @@
      * Maximum obstacle grouping count.
      * @const
      */
-    Obstacle.MAX_OBSTACLE_LENGTH = 3,
+    Obstacle.MAX_OBSTACLE_LENGTH = 1,
 
 
         Obstacle.prototype = {
@@ -1346,12 +1349,14 @@
                 if (this.currentFrame > 0) {
                     sourceX += sourceWidth * this.currentFrame;
                 }
+                var destinationWidth = this.typeConfig.destinationWidth || this.typeConfig.width;
+                var destinationHeight = this.typeConfig.destinationHeight || this.typeConfig.height;
 
-                this.canvasCtx.drawImage(Runner.imageSprite,
+                this.canvasCtx.drawImage(Runner.obstacleSprite,
                     sourceX, this.spritePos.y,
                     sourceWidth * this.size, sourceHeight,
                     this.xPos, this.yPos,
-                    this.typeConfig.width * this.size, this.typeConfig.height);
+                    destinationWidth * this.size, destinationHeight);
             },
 
             /**
@@ -1432,8 +1437,10 @@
     Obstacle.types = [
         {
             type: 'CACTUS_SMALL',
-            width: 17,
-            height: 35,
+            width: 100,
+            height: 100,
+            destinationWidth: 50,
+            destinationHeight: 50,
             yPos: 105,
             multipleSpeed: 4,
             minGap: 120,
@@ -1446,8 +1453,10 @@
         },
         {
             type: 'CACTUS_LARGE',
-            width: 25,
-            height: 50,
+            width: 100,
+            height: 100,
+            destinationWidth: 50,
+            destinationHeight: 50,
             yPos: 90,
             multipleSpeed: 7,
             minGap: 120,
@@ -1460,8 +1469,10 @@
         },
         {
             type: 'PTERODACTYL',
-            width: 46,
-            height: 40,
+            width: 100,
+            height: 100,
+            destinationWidth: 50,
+            destinationHeight: 50,
             yPos: [100, 75, 50], // Variable height.
             yPosMobile: [100, 50], // Variable height mobile.
             multipleSpeed: 999,
