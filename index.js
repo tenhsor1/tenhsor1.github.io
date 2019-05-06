@@ -118,6 +118,7 @@
         MAX_BLINK_COUNT: 3,
         MAX_CLOUDS: 6,
         MAX_OBSTACLE_LENGTH: 1,
+        MAX_DISTANCE_METER: 2020,
         MAX_OBSTACLE_DUPLICATION: 2,
         MAX_SPEED: 3,
         MIN_JUMP_HEIGHT: 55,
@@ -572,6 +573,12 @@
 
                     if (this.currentSpeed < this.config.MAX_SPEED) {
                         this.currentSpeed += this.config.ACCELERATION;
+                    }
+                    if(this.config.MAX_DISTANCE_METER) {
+                        var currentDistanceMeter = this.distanceMeter.getActualDistance(this.distanceRan);
+                        if(currentDistanceMeter >= this.config.MAX_DISTANCE_METER) {
+                            this.gameOver();
+                        }
                     }
                 } else {
                     this.gameOver();
@@ -2822,6 +2829,7 @@
             this.obstacles = [];
             this.horizonLine.reset();
             this.nightMode.reset();
+            this.drawnObstacles = [];
         },
 
         /**
