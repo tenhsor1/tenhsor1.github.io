@@ -110,7 +110,7 @@
         CLEAR_TIME: 3000,
         CLOUD_FREQUENCY: 0.5,
         GAMEOVER_CLEAR_TIME: 750,
-        GAP_COEFFICIENT: 0.6,
+        GAP_COEFFICIENT: 0,
         GRAVITY: 0.6,
         INITIAL_JUMP_VELOCITY: 12,
         INVERT_FADE_DURATION: 12000,
@@ -123,7 +123,7 @@
         MIN_JUMP_HEIGHT: 55,
         MOBILE_SPEED_COEFFICIENT: 1.2,
         RESOURCE_TEMPLATE_ID: 'audio-resources',
-        SPEED: 3,
+        SPEED: 4,
         SPEED_DROP_COEFFICIENT: 3
     };
 
@@ -160,24 +160,30 @@
      */
     Runner.spriteDefinition = {
         LDPI: {
-            CACTUS_LARGE: { x: 0, y: 0 },
-            CACTUS_SMALL: { x: 0, y: 101 },
+            MIHUDETEC: { x: 0, y: 404 },
+            ADKINS: { x: 0, y: 0 },
+            ENTRYLESS: { x: 0, y: 101 },
+            SERVISSO: { x: 0, y: 505 },
+            ITEXICO: { x: 0, y: 303 },
+            FREEAGENT: { x: 0, y: 202 },
             CLOUD: { x: 86, y: 2 },
             HORIZON: { x: 2, y: 54 },
             MOON: { x: 484, y: 2 },
-            PTERODACTYL: { x: 0, y: 202 },
             RESTART: { x: 2, y: 2 },
             TEXT_SPRITE: { x: 655, y: 2 },
             TREX: { x: 848, y: 2 },
             STAR: { x: 645, y: 2 }
         },
         HDPI: {
-            CACTUS_LARGE: { x: 0, y: 0 },
-            CACTUS_SMALL: { x: 0, y: 101 },
+            MIHUDETEC: { x: 0, y: 404 },
+            ADKINS: { x: 0, y: 0 },
+            ENTRYLESS: { x: 0, y: 101 },
+            SERVISSO: { x: 0, y: 505 },
+            ITEXICO: { x: 0, y: 303 },
+            FREEAGENT: { x: 0, y: 202 },
             CLOUD: { x: 166, y: 2 },
             HORIZON: { x: 2, y: 104 },
             MOON: { x: 954, y: 2 },
-            PTERODACTYL: { x: 0, y: 202 },
             RESTART: { x: 2, y: 2 },
             TEXT_SPRITE: { x: 1294, y: 2 },
             TREX: { x: 1678, y: 2 },
@@ -299,11 +305,13 @@
             if (Runner.imageSprite.complete && Runner.obstacleSprite.complete) {
                 this.init();
             } else {
+                var runnerContext = this;
                 // If the images are not yet loaded, add a listener.
                 Runner.imageSprite.addEventListener(Runner.events.LOAD,
-                    this.init.bind(this));
-                Runner.obstacleSprite.addEventListener(Runner.events.LOAD, 
-                    this.init.bind(this));
+                    function () {
+                        Runner.obstacleSprite.addEventListener(Runner.events.LOAD, 
+                            runnerContext.init.bind(runnerContext));
+                    });
             }
         },
 
@@ -371,13 +379,13 @@
             this.canvasCtx.fill();
             Runner.updateCanvasScaling(this.canvas);
 
-            // Horizon contains clouds, obstacles and the ground.
-            this.horizon = new Horizon(this.canvas, this.spriteDef, this.dimensions,
-                this.config.GAP_COEFFICIENT);
-
             // Distance meter
             this.distanceMeter = new DistanceMeter(this.canvas,
                 this.spriteDef.TEXT_SPRITE, this.dimensions.WIDTH);
+
+            // Horizon contains clouds, obstacles and the ground.
+            this.horizon = new Horizon(this.canvas, this.spriteDef, this.dimensions,
+                this, this.config.GAP_COEFFICIENT);
 
             // Draw t-rex
             this.tRex = new Trex(this.canvas, this.spriteDef.TREX);
@@ -556,7 +564,7 @@
                 }
 
                 // Check for collisions.
-                var collision = hasObstacles &&
+                var collision = hasObstacles && this.horizon.obstacles && this.horizon.obstacles.length > 0 &&
                     checkForCollision(this.horizon.obstacles[0], this.tRex);
 
                 if (!collision) {
@@ -1436,12 +1444,44 @@
      */
     Obstacle.types = [
         {
-            type: 'CACTUS_SMALL',
+            type: 'MIHUDETEC',
             width: 100,
             height: 100,
             destinationWidth: 50,
             destinationHeight: 50,
-            yPos: 105,
+            yPos: 90,
+            multipleSpeed: 4,
+            minGap: 120,
+            minSpeed: 0,
+            collisionBoxes: [
+                new CollisionBox(0, 7, 5, 27),
+                new CollisionBox(4, 0, 6, 34),
+                new CollisionBox(10, 4, 7, 14)
+            ],
+        },
+        {
+            type: 'ADKINS',
+            width: 100,
+            height: 100,
+            destinationWidth: 50,
+            destinationHeight: 50,
+            yPos: 90,
+            multipleSpeed: 4,
+            minGap: 120,
+            minSpeed: 0,
+            collisionBoxes: [
+                new CollisionBox(0, 12, 7, 38),
+                new CollisionBox(8, 0, 7, 49),
+                new CollisionBox(13, 10, 10, 38)
+            ]
+        },
+        {
+            type: 'ENTRYLESS',
+            width: 100,
+            height: 100,
+            destinationWidth: 50,
+            destinationHeight: 50,
+            yPos: 90,
             multipleSpeed: 4,
             minGap: 120,
             minSpeed: 0,
@@ -1452,43 +1492,54 @@
             ]
         },
         {
-            type: 'CACTUS_LARGE',
+            type: 'SERVISSO',
             width: 100,
             height: 100,
             destinationWidth: 50,
             destinationHeight: 50,
             yPos: 90,
-            multipleSpeed: 7,
+            multipleSpeed: 4,
             minGap: 120,
             minSpeed: 0,
             collisionBoxes: [
-                new CollisionBox(0, 12, 7, 38),
-                new CollisionBox(8, 0, 7, 49),
-                new CollisionBox(13, 10, 10, 38)
+                new CollisionBox(0, 7, 5, 27),
+                new CollisionBox(4, 0, 6, 34),
+                new CollisionBox(10, 4, 7, 14)
             ]
         },
         {
-            type: 'PTERODACTYL',
+            type: 'ITEXICO',
             width: 100,
             height: 100,
             destinationWidth: 50,
             destinationHeight: 50,
-            yPos: [100, 75, 50], // Variable height.
-            yPosMobile: [100, 50], // Variable height mobile.
-            multipleSpeed: 999,
-            minSpeed: 8.5,
-            minGap: 150,
+            yPos: 90,
+            multipleSpeed: 4,
+            minGap: 120,
+            minSpeed: 0,
             collisionBoxes: [
-                new CollisionBox(15, 15, 16, 5),
-                new CollisionBox(18, 21, 24, 6),
-                new CollisionBox(2, 14, 4, 3),
-                new CollisionBox(6, 10, 4, 7),
-                new CollisionBox(10, 8, 6, 9)
+                new CollisionBox(0, 7, 5, 27),
+                new CollisionBox(4, 0, 6, 34),
+                new CollisionBox(10, 4, 7, 14)
+            ]
+        },
+        {
+            type: 'FREEAGENT',
+            width: 100,
+            height: 100,
+            destinationWidth: 50,
+            destinationHeight: 50,
+            yPos: 90,
+            multipleSpeed: 4,
+            minGap: 120,
+            minSpeed: 0,
+            collisionBoxes: [
+                new CollisionBox(0, 7, 5, 27),
+                new CollisionBox(4, 0, 6, 34),
+                new CollisionBox(10, 4, 7, 14)
             ],
-            numFrames: 2,
-            frameRate: 1000 / 6,
-            speedOffset: .8
-        }
+        },
+
     ];
 
 
@@ -1930,7 +1981,7 @@
         FLASH_ITERATIONS: 3,
 
         // Initial Meter differential
-        INITIAL_METER: 2010
+        INITIAL_METER: 2009
     };
 
 
@@ -2511,11 +2562,13 @@
      * @param {number} gapCoefficient
      * @constructor
      */
-    function Horizon(canvas, spritePos, dimensions, gapCoefficient) {
+    function Horizon(canvas, spritePos, dimensions, runner, gapCoefficient) {
         this.canvas = canvas;
         this.canvasCtx = this.canvas.getContext('2d');
         this.config = Horizon.config;
         this.dimensions = dimensions;
+        this.runner = runner;
+        this.distanceMeter = runner.distanceMeter;
         this.gapCoefficient = gapCoefficient;
         this.obstacles = [];
         this.obstacleHistory = [];
@@ -2523,6 +2576,7 @@
         this.cloudFrequency = this.config.CLOUD_FREQUENCY;
         this.spritePos = spritePos;
         this.nightMode = null;
+        this.drawnObstacles = [];
 
         // Cloud
         this.clouds = [];
@@ -2533,7 +2587,6 @@
         this.init();
     };
 
-
     /**
      * Horizon config.
      * @enum {number}
@@ -2543,7 +2596,40 @@
         BUMPY_THRESHOLD: .3,
         CLOUD_FREQUENCY: .5,
         HORIZON_HEIGHT: 16,
-        MAX_CLOUDS: 6
+        MAX_CLOUDS: 6,
+        OBSTACLE_POSITIONS: [
+            {
+                id: 1,
+                distance_meter: 2010,
+                type: 'MIHUDETEC',
+            },
+            {
+                id: 2,
+                distance_meter: 2014,
+                type: 'ADKINS',
+            },
+            {
+                id: 3,
+                distance_meter: 2015,
+                type: 'ENTRYLESS',
+            },
+            {
+                id: 4,
+                distance_meter: 2015,
+                type: 'SERVISSO',
+                gap: 400,
+            },
+            {
+                id: 5,
+                distance_meter: 2016,
+                type: 'ITEXICO',
+            },
+            {
+                id: 6,
+                distance_meter: 2017,
+                type: 'FREEAGENT',
+            },
+        ]
     };
 
 
@@ -2629,7 +2715,9 @@
             }
             this.obstacles = updatedObstacles;
 
-            if (this.obstacles.length > 0) {
+            if(this.config.OBSTACLE_POSITIONS) {
+                this.addHardcodedObstacle(currentSpeed);
+            } else if (this.obstacles.length > 0) {
                 var lastObstacle = this.obstacles[this.obstacles.length - 1];
 
                 if (lastObstacle && !lastObstacle.followingObstacleCreated &&
@@ -2653,9 +2741,16 @@
          * Add a new obstacle.
          * @param {number} currentSpeed
          */
-        addNewObstacle: function (currentSpeed) {
-            var obstacleTypeIndex = getRandomNum(0, Obstacle.types.length - 1);
-            var obstacleType = Obstacle.types[obstacleTypeIndex];
+        addNewObstacle: function (currentSpeed, obstacle) {
+            var obstacleType = Obstacle.types[0];
+            if (!obstacle) {
+                var obstacleTypeIndex = getRandomNum(0, Obstacle.types.length - 1);
+                obstacleType = Obstacle.types[obstacleTypeIndex];
+            } else {
+                var obstacleType = Obstacle.types.find(function(obstacleDefinition) {
+                    return obstacleDefinition.type === obstacle.type;
+                });
+            }
 
             // Check for multiples of the same type of obstacle.
             // Also check obstacle is available at current speed.
@@ -2673,6 +2768,33 @@
 
                 if (this.obstacleHistory.length > 1) {
                     this.obstacleHistory.splice(Runner.config.MAX_OBSTACLE_DUPLICATION);
+                }
+            }
+        },
+
+        /**
+         * Add a new obstacle based on hardcoded ones coming from OBTACLE_POSITIONS.
+         * @param {number} currentSpeed
+         */
+        addHardcodedObstacle: function (currentSpeed) {
+            var drawnObstacles = this.drawnObstacles;
+            const actualDistance = this.distanceMeter.getActualDistance(this.runner.distanceRan);
+            const currentObstacles = this.config.OBSTACLE_POSITIONS.filter(function(obstaclePosition) {
+                return obstaclePosition.distance_meter === actualDistance && 
+                    !drawnObstacles.find(function(drawnObstacle) {
+                        return drawnObstacle.id === obstaclePosition.id;
+                    });
+            });
+            if (currentObstacles && currentObstacles.length > 0) {
+                var currentObstacle = currentObstacles[0];
+                var prevObstacle = this.drawnObstacles[this.drawnObstacles.length - 1];
+                var shouldAddObstacle = true;
+                if(currentObstacle.gap && prevObstacle) {
+                    shouldAddObstacle = (this.runner.distanceRan - prevObstacle.distance) > currentObstacle.gap;
+                }
+                if (shouldAddObstacle) {
+                    this.addNewObstacle(currentSpeed, currentObstacle);
+                    this.drawnObstacles.push({ id: currentObstacle.id, distance: this.runner.distanceRan });
                 }
             }
         },
