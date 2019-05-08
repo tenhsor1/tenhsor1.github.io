@@ -577,11 +577,11 @@
                     if(this.config.MAX_DISTANCE_METER) {
                         var currentDistanceMeter = this.distanceMeter.getActualDistance(this.distanceRan);
                         if(currentDistanceMeter >= this.config.MAX_DISTANCE_METER) {
-                            this.gameOver();
+                            this.gameOver(this.horizon.obstacles[0]);
                         }
                     }
                 } else {
-                    this.gameOver();
+                    this.gameOver(this.horizon.obstacles[0]);
                 }
 
                 var playAchievementSound = this.distanceMeter.update(deltaTime,
@@ -788,7 +788,7 @@
         /**
          * Game over state.
          */
-        gameOver: function () {
+        gameOver: function (obstacle) {
             this.playSound(this.soundFx.HIT);
             vibrate(200);
 
@@ -815,6 +815,13 @@
 
             // Reset the time clock.
             this.time = getTimeStamp();
+
+            // Redirect depending on the obstacle attribute
+            if (obstacle && obstacle.redirect) {
+                setTimeout(function(){
+                    window.location.href = obstacle.redirect;
+                }, 2000);
+            }
         },
 
         stop: function () {
@@ -1274,6 +1281,7 @@
         this.collisionBoxes = [];
         this.gap = 0;
         this.speedOffset = 0;
+        this.redirect = this.typeConfig.redirect;
 
         // For animated obstacles.
         this.currentFrame = 0;
@@ -1460,6 +1468,7 @@
             multipleSpeed: 4,
             minGap: 120,
             minSpeed: 0,
+            redirect: 'resume#mihudetec',
             collisionBoxes: [
                 new CollisionBox(0, 7, 5, 27),
                 new CollisionBox(4, 0, 6, 34),
@@ -1476,6 +1485,7 @@
             multipleSpeed: 4,
             minGap: 120,
             minSpeed: 0,
+            redirect: 'resume#adkins',
             collisionBoxes: [
                 new CollisionBox(0, 12, 7, 38),
                 new CollisionBox(8, 0, 7, 49),
@@ -1492,6 +1502,7 @@
             multipleSpeed: 4,
             minGap: 120,
             minSpeed: 0,
+            redirect: 'resume#entryless',
             collisionBoxes: [
                 new CollisionBox(0, 7, 5, 27),
                 new CollisionBox(4, 0, 6, 34),
@@ -1508,6 +1519,7 @@
             multipleSpeed: 4,
             minGap: 120,
             minSpeed: 0,
+            redirect: 'resume#servisso',
             collisionBoxes: [
                 new CollisionBox(0, 7, 5, 27),
                 new CollisionBox(4, 0, 6, 34),
@@ -1524,6 +1536,7 @@
             multipleSpeed: 4,
             minGap: 120,
             minSpeed: 0,
+            redirect: 'resume#itexico',
             collisionBoxes: [
                 new CollisionBox(0, 7, 5, 27),
                 new CollisionBox(4, 0, 6, 34),
@@ -1540,6 +1553,7 @@
             multipleSpeed: 4,
             minGap: 120,
             minSpeed: 0,
+            redirect: 'resume#freeagent',
             collisionBoxes: [
                 new CollisionBox(0, 7, 5, 27),
                 new CollisionBox(4, 0, 6, 34),

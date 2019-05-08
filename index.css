@@ -1,4 +1,10 @@
 
+.clearfix {
+  display: block;
+  content: "";
+  clear: both;
+}
+
 a {
   color: rgb(88, 88, 88);
 }
@@ -532,7 +538,6 @@ h2 {
   color: #666;
   font-size: 1.2em;
   font-weight: normal;
-  margin: 10px 0;
 }
 
 a {

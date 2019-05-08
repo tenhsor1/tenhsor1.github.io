@@ -1,0 +1,20 @@
+img {
+  vertical-align: middle;
+  float: left;
+  width: 50px;
+  height: 50px;
+  margin-right: 15px;
+}
+
+.interstitial-wrapper .no-bottom-margin {
+  margin-bottom: 0;
+}
+
+.interstitial-wrapper .no-top-margin {
+  margin-top: 0;
+}
+
+.company-time{
+  font-size: 0.7em;
+  margin-left: 20px;
+}
