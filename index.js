@@ -1612,7 +1612,7 @@
             multipleSpeed: 4,
             minGap: 120,
             minSpeed: 0,
-            redirect: 'resume',
+            redirect: '#resume',
             collisionBoxes: [
                 new CollisionBox(0, 0, 50, 150),
                 // new CollisionBox(4, 0, 6, 34),
