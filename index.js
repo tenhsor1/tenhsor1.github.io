@@ -118,7 +118,6 @@
         MAX_BLINK_COUNT: 3,
         MAX_CLOUDS: 6,
         MAX_OBSTACLE_LENGTH: 1,
-        MAX_DISTANCE_METER: 2020,
         MAX_OBSTACLE_DUPLICATION: 2,
         MAX_SPEED: 3,
         MIN_JUMP_HEIGHT: 55,
@@ -161,12 +160,25 @@
      */
     Runner.spriteDefinition = {
         LDPI: {
-            MIHUDETEC: { x: 0, y: 404 },
-            ADKINS: { x: 0, y: 0 },
-            ENTRYLESS: { x: 0, y: 101 },
-            SERVISSO: { x: 0, y: 505 },
-            ITEXICO: { x: 0, y: 303 },
-            FREEAGENT: { x: 0, y: 202 },
+            YOU: { x: 0, y: 0 },
+            ADKINS: { x: 0, y: 234 },
+            ANDROID: { x: 0, y: 335 },
+            APOLLO: { x: 0, y: 436 },
+            ENTRYLESS: { x: 0, y: 537 },
+            FREEAGENT: { x: 0, y: 638 },
+            ITEXICO: { x: 0, y: 739 },
+            JAVASCRIPT: { x: 0, y: 840 },
+            LARAVEL: { x: 0, y: 941 },
+            MIHUDETEC: { x: 0, y: 1042 },
+            MYSQL: { x: 0, y: 1143 },
+            NODE: { x: 0, y: 1244 },
+            PHP: { x: 0, y: 1345 },
+            POSTGRES: { x: 0, y: 1446 },
+            PYTHON: { x: 0, y: 1547 },
+            REACT: { x: 0, y: 1648 },
+            REDIS: { x: 0, y: 1749 },
+            SERVISSO: { x: 0, y: 1850 },
+            TORNADO: { x: 0, y: 1951 },
             CLOUD: { x: 86, y: 2 },
             HORIZON: { x: 2, y: 54 },
             MOON: { x: 484, y: 2 },
@@ -176,12 +188,25 @@
             STAR: { x: 645, y: 2 }
         },
         HDPI: {
-            MIHUDETEC: { x: 0, y: 404 },
-            ADKINS: { x: 0, y: 0 },
-            ENTRYLESS: { x: 0, y: 101 },
-            SERVISSO: { x: 0, y: 505 },
-            ITEXICO: { x: 0, y: 303 },
-            FREEAGENT: { x: 0, y: 202 },
+            YOU: { x: 0, y: 0 },
+            ADKINS: { x: 0, y: 234 },
+            ANDROID: { x: 0, y: 335 },
+            APOLLO: { x: 0, y: 436 },
+            ENTRYLESS: { x: 0, y: 537 },
+            FREEAGENT: { x: 0, y: 638 },
+            ITEXICO: { x: 0, y: 739 },
+            JAVASCRIPT: { x: 0, y: 840 },
+            LARAVEL: { x: 0, y: 941 },
+            MIHUDETEC: { x: 0, y: 1042 },
+            MYSQL: { x: 0, y: 1143 },
+            NODE: { x: 0, y: 1244 },
+            PHP: { x: 0, y: 1345 },
+            POSTGRES: { x: 0, y: 1446 },
+            PYTHON: { x: 0, y: 1547 },
+            REACT: { x: 0, y: 1648 },
+            REDIS: { x: 0, y: 1749 },
+            SERVISSO: { x: 0, y: 1850 },
+            TORNADO: { x: 0, y: 1951 },
             CLOUD: { x: 166, y: 2 },
             HORIZON: { x: 2, y: 104 },
             MOON: { x: 954, y: 2 },
@@ -574,12 +599,6 @@
                     if (this.currentSpeed < this.config.MAX_SPEED) {
                         this.currentSpeed += this.config.ACCELERATION;
                     }
-                    if(this.config.MAX_DISTANCE_METER) {
-                        var currentDistanceMeter = this.distanceMeter.getActualDistance(this.distanceRan);
-                        if(currentDistanceMeter >= this.config.MAX_DISTANCE_METER) {
-                            this.gameOver(this.horizon.obstacles[0]);
-                        }
-                    }
                 } else {
                     this.gameOver(this.horizon.obstacles[0]);
                 }
@@ -818,9 +837,8 @@
 
             // Redirect depending on the obstacle attribute
             if (obstacle && obstacle.redirect) {
-                setTimeout(function(){
-                    window.location.href = obstacle.redirect;
-                }, 2000);
+                this.beforeRedirect();
+                window.location.href = obstacle.redirect;
             }
         },
 
@@ -900,6 +918,13 @@
                 this.inverted = document.body.classList.toggle(Runner.classes.INVERTED,
                     this.invertTrigger);
             }
+        },
+        /**
+         * Handler used before when a redirection happens.
+         */
+        beforeRedirect: function() {
+            document.getElementById('resume').classList.remove('hidden');
+            document.getElementById('show-resume').classList.add('hidden');
         }
     };
 
@@ -1449,6 +1474,23 @@
             }
         };
 
+    
+    Obstacle.defaultType = {
+        width: 100,
+        height: 100,
+        destinationWidth: 50,
+        destinationHeight: 50,
+        yPos: 20,
+        multipleSpeed: 4,
+        minGap: 120,
+        minSpeed: 0,
+        redirect: '#resume',
+        collisionBoxes: [
+            new CollisionBox(0, 7, 5, 27),
+            new CollisionBox(4, 0, 6, 34),
+            new CollisionBox(10, 4, 7, 14)
+        ],
+    };
 
     /**
      * Obstacle definitions.
@@ -1468,7 +1510,7 @@
             multipleSpeed: 4,
             minGap: 120,
             minSpeed: 0,
-            redirect: 'resume#mihudetec',
+            redirect: '#mihudetec',
             collisionBoxes: [
                 new CollisionBox(0, 7, 5, 27),
                 new CollisionBox(4, 0, 6, 34),
@@ -1485,7 +1527,7 @@
             multipleSpeed: 4,
             minGap: 120,
             minSpeed: 0,
-            redirect: 'resume#adkins',
+            redirect: '#adkins',
             collisionBoxes: [
                 new CollisionBox(0, 12, 7, 38),
                 new CollisionBox(8, 0, 7, 49),
@@ -1502,7 +1544,7 @@
             multipleSpeed: 4,
             minGap: 120,
             minSpeed: 0,
-            redirect: 'resume#entryless',
+            redirect: '#entryless',
             collisionBoxes: [
                 new CollisionBox(0, 7, 5, 27),
                 new CollisionBox(4, 0, 6, 34),
@@ -1519,7 +1561,7 @@
             multipleSpeed: 4,
             minGap: 120,
             minSpeed: 0,
-            redirect: 'resume#servisso',
+            redirect: '#servisso',
             collisionBoxes: [
                 new CollisionBox(0, 7, 5, 27),
                 new CollisionBox(4, 0, 6, 34),
@@ -1536,7 +1578,7 @@
             multipleSpeed: 4,
             minGap: 120,
             minSpeed: 0,
-            redirect: 'resume#itexico',
+            redirect: '#itexico',
             collisionBoxes: [
                 new CollisionBox(0, 7, 5, 27),
                 new CollisionBox(4, 0, 6, 34),
@@ -1553,14 +1595,30 @@
             multipleSpeed: 4,
             minGap: 120,
             minSpeed: 0,
-            redirect: 'resume#freeagent',
+            redirect: '#freeagent',
             collisionBoxes: [
                 new CollisionBox(0, 7, 5, 27),
                 new CollisionBox(4, 0, 6, 34),
                 new CollisionBox(10, 4, 7, 14)
             ],
         },
-
+        {
+            type: 'YOU',
+            width: 100,
+            height: 233,
+            destinationWidth: 50,
+            destinationHeight: 145,
+            yPos: 0,
+            multipleSpeed: 4,
+            minGap: 120,
+            minSpeed: 0,
+            redirect: 'resume',
+            collisionBoxes: [
+                new CollisionBox(0, 0, 50, 150),
+                // new CollisionBox(4, 0, 6, 34),
+                // new CollisionBox(10, 4, 7, 14)
+            ],
+        },
     ];
 
 
@@ -2620,35 +2678,137 @@
         MAX_CLOUDS: 6,
         OBSTACLE_POSITIONS: [
             {
-                id: 1,
+                id: 'mhd',
                 distance_meter: 2010,
                 type: 'MIHUDETEC',
             },
             {
-                id: 2,
+                id: 'mhd-php',
+                distance_meter: 2011,
+                type: 'PHP',
+            },
+            {
+                id: 'mhd-js',
+                distance_meter: 2012,
+                type: 'JAVASCRIPT',
+            },
+            {
+                id: 'mhd-android',
+                distance_meter: 2013,
+                type: 'ANDROID',
+            },
+            {
+                id: 'adkins',
                 distance_meter: 2014,
                 type: 'ADKINS',
             },
             {
-                id: 3,
+                id: 'adkins-php',
+                distance_meter: 2014,
+                type: 'PHP',
+                gap: 400,
+            },
+            {
+                id: 'adkins-js',
+                distance_meter: 2014,
+                type: 'JAVASCRIPT',
+                gap: 400,
+            },
+            {
+                id: 'entryless',
                 distance_meter: 2015,
                 type: 'ENTRYLESS',
             },
             {
-                id: 4,
+                id: 'entryless-python',
                 distance_meter: 2015,
-                type: 'SERVISSO',
-                gap: 400,
+                type: 'PYTHON',
+                gap: 165,
             },
             {
-                id: 5,
+                id: 'entryless-tornado',
+                distance_meter: 2015,
+                type: 'TORNADO',
+                gap: 165,
+            },
+            {
+                id: 'servisso',
+                distance_meter: 2015,
+                type: 'SERVISSO',
+                gap: 165,
+            },
+            {
+                id: 'servisso-laravel',
+                distance_meter: 2015,
+                type: 'LARAVEL',
+                gap: 165,
+            },
+            {
+                id: 'servisso-node',
+                distance_meter: 2015,
+                type: 'NODE',
+                gap: 165,
+            },
+            {
+                id: 'itexico',
                 distance_meter: 2016,
                 type: 'ITEXICO',
             },
             {
-                id: 6,
+                id: 'itexico-node',
+                distance_meter: 2016,
+                type: 'NODE',
+                gap: 250,
+            },
+            {
+                id: 'itexico-react',
+                distance_meter: 2016,
+                type: 'REACT',
+                gap: 250,
+            },
+            {
+                id: 'itexico-mysql',
+                distance_meter: 2016,
+                type: 'MYSQL',
+                gap: 250,
+            },
+            {
+                id: 'freeagent',
                 distance_meter: 2017,
                 type: 'FREEAGENT',
+            },
+            {
+                id: 'freeagent-node',
+                distance_meter: 2017,
+                type: 'NODE',
+                gap: 300,
+            },
+            {
+                id: 'freeagent-react',
+                distance_meter: 2017,
+                type: 'REACT',
+                gap: 300,
+            },
+            {
+                id: 'freeagent-apollo',
+                distance_meter: 2018,
+                type: 'APOLLO',
+            },
+            {
+                id: 'freeagent-postgres',
+                distance_meter: 2018,
+                type: 'POSTGRES',
+                gap: 300,
+            },
+            {
+                id: 'freeagent-redis',
+                distance_meter: 2019,
+                type: 'REDIS',
+            },
+            {
+                id: 'you',
+                distance_meter: 2020,
+                type: 'YOU',
             },
         ]
     };
@@ -2768,9 +2928,13 @@
                 var obstacleTypeIndex = getRandomNum(0, Obstacle.types.length - 1);
                 obstacleType = Obstacle.types[obstacleTypeIndex];
             } else {
-                var obstacleType = Obstacle.types.find(function(obstacleDefinition) {
+                obstacleType = Obstacle.types.find(function(obstacleDefinition) {
                     return obstacleDefinition.type === obstacle.type;
                 });
+                if (!obstacleType) {
+                    obstacleType = Obstacle.defaultType;
+                    obstacleType.type = obstacle.type;
+                }
             }
 
             // Check for multiples of the same type of obstacle.
@@ -2866,9 +3030,10 @@
     };
 })();
 
+var runnerInstance = null;
 
 function onDocumentLoad() {
-    new Runner('.interstitial-wrapper');
+    runnerInstance = new Runner('.interstitial-wrapper');
 }
 
 document.addEventListener('DOMContentLoaded', onDocumentLoad);
